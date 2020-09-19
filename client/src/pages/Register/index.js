@@ -51,9 +51,11 @@ function Register() {
         if(isValidUser()){
             const res = await apiCall(Register_URL, {email, password})
 
-            console.log(res);
+            //console.log(res);
 
             if(res.status === 'ok') {
+                //TODO : tokens => refresh tokens
+                //TODO : localstorage => memory
                 localStorage.setItem('token', res.data)
                 //data.isLoading=false;          
                 alert(`Your account is created successfully.✅`);

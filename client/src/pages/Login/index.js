@@ -7,7 +7,6 @@ import { apiCall } from '../utilities';
 
 function Login() {
 
-
     const history = useHistory();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -51,9 +50,11 @@ function Login() {
 			
 			const res = await apiCall(SIGNIN_URL, {email, password})
             
-            console.log(res);
+            //console.log(res);
 
 			if(res.status === 'ok') {
+                //TODO : tokens => refresh tokens
+                //TODO : localstorage => memory
                 // user logged in successfully
 				localStorage.setItem('token', res.data);
 				alert('You are successfully signed In. ✅');
