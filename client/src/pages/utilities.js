@@ -3,6 +3,7 @@ export const IS_PRODUCTION = !IS_DEVELOPMENT
 
 const API_URL = IS_PRODUCTION ? '' : 'http://localhost:1337'
 
+// Api Call Utility
 export async function apiCall(path, payload) {
 
     
@@ -16,4 +17,10 @@ export async function apiCall(path, payload) {
     }).then((t) => t.json())
 
     return res;
+}
+
+// Json web token authentication Utility
+export async function authenticate() {
+
+    const res = await fetch()
 }
