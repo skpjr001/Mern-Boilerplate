@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button } from '@material-ui/core'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './Home'
 import Login from './Login'
 import Register from './Register'
 import About from './About'
+import Dashboard from './Dashboard'
 function App() {
   return (
     <Router>
@@ -13,6 +13,7 @@ function App() {
         <Route path="/login" component={Login} exact></Route>
         <Route path="/register" component={Register} exact></Route>
         <Route path="/about" component={About} exact></Route>
+        <Route path="/dashboard" component={Dashboard} exact></Route>
       </Switch>
     </Router>
   );

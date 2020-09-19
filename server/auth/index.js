@@ -4,14 +4,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const db = require('../db/connection');
-const users = db.get('users');
+const users = db.get('mern');
 // users.index('username');
-users.createIndex('username', {unique: true});
+users.createIndex('email', {unique: true});
 
 const router = Router();
 
 const schema =Joi.object().keys({
-    username: Joi.string().alphanum().min(4).max(30).required(),
+    email: Joi.string().alphanum().min(4).max(30).required(),
     password: Joi.string().trim().min(8).max(50).required(),
     //repeat_password: Joi.ref('password')
 });
@@ -20,14 +20,16 @@ const schema =Joi.object().keys({
 function createTokensendResponse(user, res, next) {
 	const payload ={
 		_id: user._id,
-		username: user.username
+		email: user.email
 	};
 	jwt.sign(payload, process.env.TOKEN_SECRET,{expiresIn: '1d'},(err, token) => {
 		if(err){
 			respondError422(res, next);
 		} else {
+			res.status(200);
 			res.json({
-				token
+				status: 'ok',
+				data:token
 			});
 		}
 	});
@@ -41,18 +43,18 @@ router.get('/', (req, res) => {
 });
 
 //POST /auth/signup
-router.post('/signup', (req, res, next) => {
+router.post('/register', (req, res, next) => {
     const result = schema.validate(req.body);
     if(result.error == null) {
       // make sure username is unique
       users.findOne({
-        username: req.body.username
+        email: req.body.email
         }).then((user) => {
 				// if user is undefined , username is not in the db, else duplicate username
 				if (user) {
 						// there is already a user in the db with this username
 						// respond with an error!
-						const error = new Error('username already registered! Try another username.');
+						const error = new Error('email already registered! Try another email.');
 						res.status(409);
 						next(error);
 				} else {
@@ -60,7 +62,7 @@ router.post('/signup', (req, res, next) => {
 						bcrypt.hash(req.body.password.trim(), 12).then((hashedPassword) => {
 								//insert the user with the hashed password
 								const newUser = {
-										username: req.body.username,
+										email: req.body.email,
 										password: hashedPassword
 								};
 								// inserting user object into db
@@ -86,12 +88,12 @@ function respondError422(res, next) {
 }
 
 //POST /auth/login
-router.post('/signin', (req, res, next)=>{
+router.post('/login', (req, res, next)=>{
 	const result = schema.validate(req.body);
 	// chexks
 	if(result.error == null) {
 		users.findOne({
-			username: req.body.username,
+			email: req.body.email,
 		}).then((user) => {
 			if(user){
 				// found the user in the db ... so this is the actual username
