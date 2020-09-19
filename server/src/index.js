@@ -3,9 +3,11 @@ const express = require('express');
 const volleyball = require('volleyball');
 const cors = require('cors');
 const helmet = require('helmet');
+const { checkTokenSetUser, isLoggedIn } = require('../auth/middlewares')
 const { notFound, errorHandler } = require('./middlewares')
 const auth = require('../auth/index'); // auth router
-const { checkTokenSetUser } = require('../auth/middlewares')
+const notes = require('../api/notes');
+
  
 
 const app = express(); //express app
@@ -27,6 +29,7 @@ app.get('/world', (req,res) => {
 
 //ROUTES
 app.use('/auth', auth);
+app.use('/api/v1/notes', isLoggedIn, notes);
 
 //ERROR HANDLING MIDDLEWARES
 app.use(notFound); // notFound error handler
