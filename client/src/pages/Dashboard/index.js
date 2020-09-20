@@ -9,7 +9,7 @@ function Dashboard() {
     const [user, setUser] = useState({});
     const [toggleForm, setToggleForm] = useState(false);
     const [newNote, setNewNote] = useState({title:'', note:''});
-    const [notes, setNotes] = useState([]);
+    const [notesList, setNotesList] = useState([]);
 
 
     const API_URL = 'http://localhost:1337/world'
@@ -23,6 +23,7 @@ function Dashboard() {
         .then((result) => {
             if(result.user){
               setUser(result.user)
+              getNotes();
             } else {
                 localStorage.removeItem('token')
                 history.push('/login')
@@ -62,13 +63,25 @@ function Dashboard() {
             }
         }).then(res => res.json())
         .then((note) =>{
-            setNotes([...notes, note]);
-            //console.log(notes);
+            setNotesList([...notesList, note]);
+            //console.log(notesList);
             setNewNote({title:'',note:''});
             setToggleForm(false);
         })
     }
     
+    // addNote Handler Function
+    const getNotes = () => {
+        fetch('/api/v1/notes', {
+            headers : {
+                authorization : `Bearer: ${localStorage.getItem('token')}`
+            },
+        }).then((res) => res.json())
+        .then((notes) => {
+            setNotesList(notes);
+            
+        })
+    }
     
 
 
@@ -127,6 +140,10 @@ function Dashboard() {
             >Add note</Button>
 
             </form> : <h1>Toggle to write note</h1>}
+
+            <div>{user ? notesList.map((e) => 
+                <h4 key={e._id}>{e.title}</h4>
+            ):""}</div>
             
         </div>
     )
