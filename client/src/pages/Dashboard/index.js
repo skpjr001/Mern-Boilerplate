@@ -1,7 +1,9 @@
-import { Button, InputLabel, TextareaAutosize, TextField } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardContent, InputLabel, TextareaAutosize, TextField, Typography } from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import { apiCall } from '../utilities';
+import './style.css';
 
 function Dashboard() {
 
@@ -11,6 +13,7 @@ function Dashboard() {
     const [newNote, setNewNote] = useState({title:'', note:''});
     const [notesList, setNotesList] = useState([]);
 
+    const inputRef = useRef(null);
 
     const API_URL = 'http://localhost:1337/world'
 
@@ -86,7 +89,7 @@ function Dashboard() {
 
 
     return (
-        <div>
+        <div >
             <h1>Dashboard</h1>
             <Button
             variant='contained'
@@ -140,10 +143,20 @@ function Dashboard() {
             >Add note</Button>
 
             </form> : <h1>Toggle to write note</h1>}
-
-            <div>{user ? notesList.map((e) => 
-                <h4 key={e._id}>{e.title}</h4>
-            ):""}</div>
+            <div className='card-wrapper'>
+            {user ? notesList.map((e) => 
+                <Card key={e._id} className='card'>
+                    <CardContent className='card-content'>
+                    <Typography color="textSecondary" gutterBottom>
+                        {e.title}
+                    </Typography>
+                    <Typography variant="h5" component="h2">
+                        {e.note}
+                    </Typography>
+                    </CardContent>
+                </Card>
+            ):""}
+            </div>
             
         </div>
     )
