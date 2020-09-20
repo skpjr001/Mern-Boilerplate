@@ -11,6 +11,7 @@ const checkTokenSetUser = (req, res, next) => {
 				}
 
 				req.user = user;
+				console.log(req.user,"inside middleware 1")
 				next();
 			})
 		} else {

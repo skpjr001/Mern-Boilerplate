@@ -9,6 +9,8 @@ function Dashboard() {
     const [user, setUser] = useState({});
     const [toggleForm, setToggleForm] = useState(false);
     const [newNote, setNewNote] = useState({title:'', note:''});
+    const [notes, setNotes] = useState([]);
+
 
     const API_URL = 'http://localhost:1337/world'
 
@@ -50,7 +52,6 @@ function Dashboard() {
 
     // addNote Handler Function
     const  addNote = async () => {
-        console.log(newNote);
         //console.log();
         const res = await fetch('/api/v1/notes', {
             method: 'POST',
@@ -61,7 +62,10 @@ function Dashboard() {
             }
         }).then(res => res.json())
         .then((note) =>{
-            console.log(note)
+            setNotes([...notes, note]);
+            //console.log(notes);
+            setNewNote({title:'',note:''});
+            setToggleForm(false);
         })
     }
     

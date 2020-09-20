@@ -20,7 +20,7 @@ export async function apiCall(Path, Payload) {
 }
 
 // Json web token authentication Utility
-export async function authenticate() {
+// export async function authenticate() {
 
-    const res = await fetch()
-}
+//     const res = await fetch()
+// }
