@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const db = require('../db/connection');
-const users = db.get('mern');
+const users = db.get('users');
 // users.index('username');
 users.createIndex('email', {unique: true});
 
@@ -20,7 +20,9 @@ const schema =Joi.object().keys({
 function createTokensendResponse(user, res, next) {
 	const payload ={
 		_id: user._id,
-		email: user.email
+		email: user.email,
+		role: user.role,
+		active: user.active
 	};
 	jwt.sign(payload, process.env.TOKEN_SECRET,{expiresIn: '1d'},(err, token) => {
 		if(err){
@@ -63,7 +65,9 @@ router.post('/register', (req, res, next) => {
 								//insert the user with the hashed password
 								const newUser = {
 										email: req.body.email,
-										password: hashedPassword
+										password: hashedPassword,
+										role: 'user',
+										active: true
 								};
 								// inserting user object into db
 								users.insert(newUser).then((insertedUser) => {
@@ -95,7 +99,7 @@ router.post('/login', (req, res, next)=>{
 		users.findOne({
 			email: req.body.email,
 		}).then((user) => {
-			if(user){
+			if(user && user.active){
 				// found the user in the db ... so this is the actual username
 				// now we compare password to confirm user
 				bcrypt.compare(req.body.password, user.password)
